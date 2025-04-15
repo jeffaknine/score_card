@@ -42,8 +42,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final int score = holes.fold<int>(
-        0, (previous, element) => previous + (element.score != null ? element.score! - element.par : 0));
     return Scaffold(
       appBar: AppBar(
         title: const Text('Golf de Sainte-Maxime'),
@@ -188,29 +186,55 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'TOTAL',
-                  style: theme.textTheme.titleLarge,
-                ),
-                Text(
-                  'PAR ${holes.fold<int>(0, (previous, element) => previous + element.par)}',
-                  style: theme.textTheme.titleMedium,
-                )
-              ],
-            ),
-            const Spacer(),
-            Text('${!score.isNegative && score != 0 ? '+' : ''}$score'),
-            const Spacer(),
-          ],
-        ),
+      bottomSheet: Total(theme: theme, holes: holes),
+    );
+  }
+}
+
+class Total extends StatelessWidget {
+  const Total({
+    super.key,
+    required this.theme,
+    required this.holes,
+  });
+
+  final ThemeData theme;
+  final List<Hole> holes;
+
+  @override
+  Widget build(BuildContext context) {
+    final int score = holes.fold<int>(
+        0, (previous, element) => previous + (element.score != null ? element.score! - element.par : 0));
+    final int totalShots = holes.fold<int>(0, (previous, element) => previous + (element.score ?? 0));
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'TOTAL',
+                style: theme.textTheme.titleLarge,
+              ),
+              Text(
+                'PAR ${holes.fold<int>(0, (previous, element) => previous + element.par)}',
+                style: theme.textTheme.titleMedium,
+              )
+            ],
+          ),
+          const Spacer(),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('$totalShots'),
+              Text('${!score.isNegative ? '+' : ''}$score'),
+            ],
+          ),
+          const Spacer(),
+        ],
       ),
     );
   }
