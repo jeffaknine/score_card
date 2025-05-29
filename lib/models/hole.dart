@@ -1,9 +1,26 @@
+import 'package:flutter/material.dart';
+
 enum TeeColor {
-  black,
+  // black,
   white,
   yellow,
   blue,
-  red,
+  red;
+
+  Color get color {
+    switch (this) {
+      // case TeeColor.black:
+      //   return Colors.black;
+      case TeeColor.white:
+        return Colors.white;
+      case TeeColor.yellow:
+        return Colors.yellow;
+      case TeeColor.blue:
+        return Colors.blue;
+      case TeeColor.red:
+        return Colors.red;
+    }
+  }
 }
 
 class Hole {
@@ -26,11 +43,10 @@ class Hole {
     this.distanceRed = 0,
   });
 
-  int? score;
   int distance(TeeColor color) {
     switch (color) {
-      case TeeColor.black:
-        return distanceBlack;
+      // case TeeColor.black:
+      //   return distanceBlack;
       case TeeColor.white:
         return distanceWhite;
       case TeeColor.yellow:
