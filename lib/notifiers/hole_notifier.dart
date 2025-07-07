@@ -101,7 +101,7 @@ class HoleNotifier extends StateNotifier<List<Hole>> {
           par: 5,
           handicap: 6,
           distanceWhite: 424,
-          distanceYellow: 169,
+          distanceYellow: 409,
           distanceBlue: 379,
           distanceRed: 366,
         ),
