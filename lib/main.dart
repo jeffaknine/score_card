@@ -1,8 +1,13 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:score_card/features/table/table_page.dart';
+import 'package:score_card/firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -12,6 +17,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final analytics = FirebaseAnalytics.instance;
     return MaterialApp(
       title: 'Ma Carte - Sainte-Maxime',
       debugShowCheckedModeBanner: false,
@@ -19,6 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
       home: const ProviderScope(child: TablePage()),
       // home: ImageViewer(
       //   players: List.generate(

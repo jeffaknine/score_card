@@ -1,4 +1,5 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +42,7 @@ class _TablePageState extends ConsumerState<TablePage> {
         title: const Text('Golf de Sainte-Maxime'),
         leading:
             loading
-                ? const Center(child: CircularProgressIndicator(year2023: false))
+                ? const Center(child: CircularProgressIndicator())
                 : IconButton(
                   onPressed: () async {
                     setState(() {
@@ -56,6 +57,22 @@ class _TablePageState extends ConsumerState<TablePage> {
                         ext: 'jpeg',
                         mimeType: MimeType.jpeg,
                         bytes: updatedImage,
+                      );
+                      // Log analytics event after successful export
+                      final numPlayers = players.length;
+                      final holesFilled =
+                          players
+                              .expand((p) => p.score.values)
+                              .where((hs) => hs.score != 0)
+                              .map((hs) => hs.number)
+                              .toSet()
+                              .length;
+                      await FirebaseAnalytics.instance.logEvent(
+                        name: 'export_golf_card',
+                        parameters: {
+                          'num_players': numPlayers,
+                          'num_holes_filled': holesFilled,
+                        },
                       );
                     } catch (e) {
                       debugPrint(e.toString());
